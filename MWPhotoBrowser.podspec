@@ -5,14 +5,21 @@ Pod::Spec.new do |s|
   s.summary  = 'A simple iOS photo browser.'
   s.homepage = 'https://github.com/mwaterfall/MWPhotoBrowser'
   s.author   = { 'Michael Waterfall' => 'mw@d3i.com' }
-  s.source   = { :git => 'https://github.com/jeanelie/MWPhotoBrowser.git' }
-  s.platform = :ios
+  s.source   = { :git => 'https://github.com/mwaterfall/MWPhotoBrowser.git', :tag => '1.1.4' }
+  s.platform = :ios, '5.0'
 
-  s.source_files = 'MWPhotoBrowser/Classes'
+  s.subspec 'ARC' do |arc|
+    arc.source_files = 'MWPhotoBrowser/Classes/*.{h,m}'
+    arc.requires_arc = true
+    arc.prefix_header_contents = '#import "MWPreprocessor.h"'
+  end
+
   s.resources = "MWPhotoBrowser/MWPhotoBrowser.bundle"
 
-  s.frameworks = 'MessageUI', 'ImageIO'
+  s.frameworks = 'MessageUI', 'ImageIO', 'QuartzCore', 'AssetsLibrary'
 
-  s.dependency 'SDWebImage','<3.0.0'
+  s.dependency 'SDWebImage', '~> 3.5'
   s.dependency 'MBProgressHUD'
+  s.dependency 'DACircularProgress'
+  s.requires_arc = false
 end
