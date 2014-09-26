@@ -16,7 +16,7 @@
 @interface MWPhoto () {
 
     BOOL _loadingInProgress;
-        
+
 }
 
 // Properties
@@ -85,24 +85,24 @@
     _loadingInProgress = YES;
     @try {
         if (self.underlyingImage) {
-            
+
             // Image already loaded
             [self imageLoadingComplete];
-            
+
         } else {
-            
+
             // Get underlying image
             if (_image) {
-                
+
                 // We have UIImage so decompress
                 self.underlyingImage = _image;
                 [self decompressImageAndFinishLoading];
-                
+
             } else if (_photoURL) {
-                
+
                 // Check what type of url it is
                 if ([[[_photoURL scheme] lowercaseString] isEqualToString:@"assets-library"]) {
-                    
+
                     // Load from asset library async
                     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
                         @autoreleasepool {
@@ -128,9 +128,9 @@
                             }
                         }
                     });
-                    
+
                 } else if ([_photoURL isFileReferenceURL]) {
-                    
+
                     // Load from local file async
                     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
                         @autoreleasepool {
@@ -144,16 +144,16 @@
                             }
                         }
                     });
-                    
+
                 } else {
-                    
+
                     // Load async from web (using SDWebImage)
                     @try {
                         SDWebImageManager *manager = [SDWebImageManager sharedManager];
                         [manager downloadWithURL:_photoURL
                                          options:0
-                                        progress:^(NSUInteger receivedSize, long long expectedSize) {
-                                            float progress = receivedSize / (float)expectedSize;
+                                        progress:^(NSInteger receivedSize, NSInteger expectedSize) {
+                                            float progress = receivedSize / expectedSize;
                                             NSDictionary* dict = [NSDictionary dictionaryWithObjectsAndKeys:
                                                                   [NSNumber numberWithFloat:progress], @"progress",
                                                                   self, @"photo", nil];
@@ -170,14 +170,14 @@
                         MWLog(@"Photo from web: %@", e);
                         [self decompressImageAndFinishLoading];
                     }
-                    
+
                 }
-                
+
             } else {
-                
+
                 // Failed - no source
                 @throw [NSException exceptionWithName:nil reason:nil userInfo:nil];
-                
+
             }
         }
     }
